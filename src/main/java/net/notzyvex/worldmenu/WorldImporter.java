@@ -223,7 +223,7 @@ final class WorldImporter {
         Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            String name = entry.getName().replace('\', '/');
+            String name = entry.getName().replace('\\', '/');
             if (!entry.isDirectory() && !name.startsWith("__MACOSX/") && name.startsWith(root)) {
                 count++;
             }
