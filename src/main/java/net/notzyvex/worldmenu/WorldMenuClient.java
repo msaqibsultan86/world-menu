@@ -1,6 +1,7 @@
 package net.notzyvex.worldmenu;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
@@ -22,5 +23,8 @@ public class WorldMenuClient implements ClientModInitializer {
                 WorldScreenButtons.addTo(screen, scaledWidth, CREATE_SCREEN_TOP);
             }
         });
+
+        // The window only exists once the client has started.
+        ClientLifecycleEvents.CLIENT_STARTED.register(WorldDropTarget::install);
     }
 }

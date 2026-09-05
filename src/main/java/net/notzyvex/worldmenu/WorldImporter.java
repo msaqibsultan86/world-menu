@@ -13,13 +13,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 final class WorldImporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldMenuClient.MOD_ID);
@@ -30,9 +37,17 @@ final class WorldImporter {
     }
 
     static void run() {
-        Thread picker = new Thread(WorldImporter::pickAndImport, "worldmenu-folder-picker");
+        Thread picker = new Thread(WorldImporter::pickAndImport, "worldmenu-picker");
         picker.setDaemon(true);
         picker.start();
+    }
+
+    /** Handles files dropped onto the game window. */
+    static void importDropped(List<Path> paths) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        for (Path path : paths) {
+            importAny(path, client);
+        }
     }
 
     // TinyFileDialogs ships with LWJGL and is safe alongside GLFW. Swing's
@@ -40,13 +55,13 @@ final class WorldImporter {
     //
     // The file dialog is used rather than the folder dialog on purpose: Windows
     // only has a real Explorer window for picking files. Its folder picker is
-    // the old cramped tree widget. Picking level.dat and taking its parent
-    // gives the same result through a far better dialog.
+    // the old cramped tree widget.
     private static void pickAndImport() {
         String chosen;
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            PointerBuffer filters = stack.mallocPointer(1);
+            PointerBuffer filters = stack.mallocPointer(2);
             filters.put(stack.UTF8(LEVEL_DAT));
+            filters.put(stack.UTF8("*.zip"));
             filters.flip();
 
             chosen = TinyFileDialogs.tinyfd_openFileDialog(
@@ -61,20 +76,41 @@ final class WorldImporter {
             return;
         }
 
-        Path worldFolder = Path.of(chosen).getParent();
         MinecraftClient client = MinecraftClient.getInstance();
+        importAny(Path.of(chosen), client);
+    }
 
-        if (worldFolder == null) {
-            client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
+    /** Accepts a world folder, a level.dat inside one, or a zipped world. */
+    private static void importAny(Path path, MinecraftClient client) {
+        if (isZip(path)) {
+            runOffThread(() -> importZip(path, client));
             return;
         }
 
-        client.execute(() -> importFrom(worldFolder, client));
+        Path folder = Files.isDirectory(path) ? path : path.getParent();
+        if (folder == null) {
+            client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
+            return;
+        }
+        runOffThread(() -> importFolder(folder, client));
     }
 
-    private static void importFrom(Path source, MinecraftClient client) {
+    // Copying can take a while for a large world, so it must not block the
+    // render thread. Only the toast and the screen refresh go back to it.
+    private static void runOffThread(Runnable work) {
+        Thread thread = new Thread(work, "worldmenu-import");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private static boolean isZip(Path path) {
+        return Files.isRegularFile(path)
+                && path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip");
+    }
+
+    private static void importFolder(Path source, MinecraftClient client) {
         if (!Files.isRegularFile(source.resolve(LEVEL_DAT))) {
-            notify(client, "worldmenu.import.not_a_world");
+            client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
             return;
         }
 
@@ -83,7 +119,7 @@ final class WorldImporter {
             destination = availableDestination(source.getFileName().toString());
         } catch (IOException e) {
             LOGGER.error("Could not pick a destination folder for {}", source, e);
-            notify(client, "worldmenu.import.failed");
+            client.execute(() -> notify(client, "worldmenu.import.failed"));
             return;
         }
 
@@ -92,12 +128,116 @@ final class WorldImporter {
         } catch (IOException e) {
             LOGGER.error("Could not copy {} into the saves folder", source, e);
             deleteTree(destination);
-            notify(client, "worldmenu.import.failed");
+            client.execute(() -> notify(client, "worldmenu.import.failed"));
             return;
         }
 
-        notify(client, "worldmenu.import.done");
-        client.setScreen(new SelectWorldScreen(new TitleScreen()));
+        finish(client);
+    }
+
+    private static void importZip(Path zipPath, MinecraftClient client) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
+            String root = findWorldRoot(zip);
+            if (root == null) {
+                client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
+                return;
+            }
+
+            String name = worldNameFor(root, zipPath);
+            Path destination = availableDestination(name);
+
+            try {
+                extract(zip, root, destination);
+            } catch (IOException e) {
+                LOGGER.error("Could not extract {} into the saves folder", zipPath, e);
+                deleteTree(destination);
+                client.execute(() -> notify(client, "worldmenu.import.failed"));
+                return;
+            }
+
+            finish(client);
+        } catch (IOException e) {
+            LOGGER.error("Could not read {}", zipPath, e);
+            client.execute(() -> notify(client, "worldmenu.import.failed"));
+        }
+    }
+
+    /**
+     * Returns the path prefix inside the zip that contains level.dat, or null if
+     * there is none. Maps are commonly zipped with a wrapper folder, sometimes
+     * two, so the shallowest level.dat wins.
+     */
+    private static String findWorldRoot(ZipFile zip) {
+        String best = null;
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (entry.isDirectory()) continue;
+
+            String name = entry.getName().replace('\\', '/');
+            if (name.startsWith("__MACOSX/")) continue;
+            if (!name.equals(LEVEL_DAT) && !name.endsWith("/" + LEVEL_DAT)) continue;
+
+            String prefix = name.substring(0, name.length() - LEVEL_DAT.length());
+            if (best == null || prefix.length() < best.length()) {
+                best = prefix;
+            }
+        }
+        return best;
+    }
+
+    private static String worldNameFor(String root, Path zipPath) {
+        String trimmed = root.endsWith("/") ? root.substring(0, root.length() - 1) : root;
+        if (!trimmed.isEmpty()) {
+            int slash = trimmed.lastIndexOf('/');
+            return slash < 0 ? trimmed : trimmed.substring(slash + 1);
+        }
+
+        String fileName = zipPath.getFileName().toString();
+        int dot = fileName.lastIndexOf('.');
+        return dot > 0 ? fileName.substring(0, dot) : fileName;
+    }
+
+    private static void extract(ZipFile zip, String root, Path destination) throws IOException {
+        Files.createDirectories(destination);
+        Path base = destination.toAbsolutePath().normalize();
+
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            String name = entry.getName().replace('\\', '/');
+            if (name.startsWith("__MACOSX/") || !name.startsWith(root)) continue;
+
+            String relative = name.substring(root.length());
+            if (relative.isEmpty()) continue;
+
+            // A crafted zip can name entries like ../../evil. Anything that
+            // resolves outside the destination is refused.
+            Path target = base.resolve(relative).normalize();
+            if (!target.startsWith(base)) {
+                throw new IOException("Zip entry escapes the destination: " + name);
+            }
+
+            if (entry.isDirectory()) {
+                Files.createDirectories(target);
+                continue;
+            }
+
+            Files.createDirectories(target.getParent());
+            try (InputStream in = zip.getInputStream(entry)) {
+                Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+    }
+
+    private static void finish(MinecraftClient client) {
+        client.execute(() -> {
+            notify(client, "worldmenu.import.done");
+            if (client.currentScreen instanceof SelectWorldScreen) {
+                client.setScreen(new SelectWorldScreen(new TitleScreen()));
+            }
+        });
     }
 
     private static Path availableDestination(String folderName) throws IOException {

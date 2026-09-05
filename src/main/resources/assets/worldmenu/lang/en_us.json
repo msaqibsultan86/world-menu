@@ -1,10 +1,10 @@
 {
   "worldmenu.button.open_folder": "Open World Folder",
   "worldmenu.button.import_world": "Import World",
-  "worldmenu.dialog.title": "Open the world folder and pick its level.dat",
-  "worldmenu.dialog.filter": "Minecraft world (level.dat)",
+  "worldmenu.dialog.title": "Pick a world's level.dat, or a zipped world",
+  "worldmenu.dialog.filter": "Minecraft world (level.dat or .zip)",
   "worldmenu.import.toast": "Import World",
-  "worldmenu.import.not_a_world": "That folder isn't a Minecraft world",
+  "worldmenu.import.not_a_world": "That isn't a Minecraft world",
   "worldmenu.import.failed": "Import failed — see the log for details",
   "worldmenu.import.done": "World imported"
 }
