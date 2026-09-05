@@ -18,7 +18,8 @@ class ImportScreen extends Screen {
     private static final Identifier BAR_BACKGROUND = Identifier.ofVanilla("hud/experience_bar_background");
     private static final Identifier BAR_PROGRESS = Identifier.ofVanilla("hud/experience_bar_progress");
 
-    private static final int BACKDROP = 0xFF14161A;
+    private static final Identifier MENU_BACKGROUND = Identifier.ofVanilla("textures/gui/menu_background.png");
+    private static final int BACKDROP = 0x60000000;
     private static final int TEXT = 0xFFFFFF;
     private static final int TEXT_DIM = 0xA0A0A0;
 
@@ -75,10 +76,12 @@ class ImportScreen extends Screen {
         client.setScreen(new SelectWorldScreen(new TitleScreen()));
     }
 
-    // Vanilla blurs whatever is behind an overlay screen. That reads as a
-    // mistake on a progress screen, so this draws a flat backdrop instead.
+    // Minecraft's own tiled dirt background, the same one the options and
+    // world-creation screens use. Vanilla would blur the screen behind instead,
+    // which reads as a mistake on a progress screen.
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        context.drawTexture(MENU_BACKGROUND, 0, 0, 0, 0, width, height, 32, 32);
         context.fill(0, 0, width, height, BACKDROP);
     }
 
