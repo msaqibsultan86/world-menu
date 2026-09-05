@@ -77,9 +77,11 @@ class ImportScreen extends Screen {
      * Vanilla blurs the frame behind any open screen, which smears the progress
      * text along with it. Everything else about the background stays vanilla.
      */
+    //? if <1.21.2 {
     @Override
     protected void renderBlurredBackground(float delta) {
     }
+    //?}
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
@@ -96,7 +98,12 @@ class ImportScreen extends Screen {
         graphics.drawCenteredString(font, Component.literal(worldName), centreX, barY - 20, 0xA0A0A0);
 
         int barX = centreX - BAR_WIDTH / 2;
+        //? if >=1.21.4 {
+        /*graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
+                BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
+        *///?} else {
         graphics.blitSprite(BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
+        //?}
 
         // Ease towards the real value so the bar glides instead of jumping.
         float target = finished ? 1.0f : progress();
@@ -104,7 +111,12 @@ class ImportScreen extends Screen {
 
         int filled = Math.round(shownProgress * BAR_WIDTH);
         if (filled > 0) {
+            //? if >=1.21.4 {
+            /*graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
+                    BAR_PROGRESS, BAR_WIDTH, BAR_HEIGHT, 0, 0, barX, barY, filled, BAR_HEIGHT);
+            *///?} else {
             graphics.blitSprite(BAR_PROGRESS, BAR_WIDTH, BAR_HEIGHT, 0, 0, barX, barY, filled, BAR_HEIGHT);
+            //?}
         }
 
         if (!finished) {

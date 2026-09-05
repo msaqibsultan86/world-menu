@@ -25,7 +25,12 @@ class IconButton extends Button {
 
         int iconX = getX() + ICON_INSET;
         int iconY = getY() + (getHeight() - ICON_SIZE) / 2;
+        //? if >=1.21.4 {
+        /*graphics.blit(net.minecraft.client.renderer.RenderType::guiTextured, icon, iconX, iconY,
+                0.0F, 0.0F, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+        *///?} else {
         graphics.blit(icon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+        //?}
     }
 
     @Override
