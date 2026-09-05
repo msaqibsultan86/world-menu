@@ -18,11 +18,6 @@ class ImportScreen extends Screen {
     private static final Identifier BAR_BACKGROUND = Identifier.ofVanilla("hud/experience_bar_background");
     private static final Identifier BAR_PROGRESS = Identifier.ofVanilla("hud/experience_bar_progress");
 
-    private static final Identifier MENU_BACKGROUND = Identifier.ofVanilla("textures/gui/menu_background.png");
-    private static final int BACKDROP = 0x60000000;
-    private static final int TEXT = 0xFFFFFF;
-    private static final int TEXT_DIM = 0xA0A0A0;
-
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
     private static final int BUTTON_WIDTH = 200;
@@ -76,15 +71,6 @@ class ImportScreen extends Screen {
         client.setScreen(new SelectWorldScreen(new TitleScreen()));
     }
 
-    // Minecraft's own tiled dirt background, the same one the options and
-    // world-creation screens use. Vanilla would blur the screen behind instead,
-    // which reads as a mistake on a progress screen.
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(MENU_BACKGROUND, 0, 0, 0, 0, width, height, 32, 32);
-        context.fill(0, 0, width, height, BACKDROP);
-    }
-
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
@@ -96,8 +82,8 @@ class ImportScreen extends Screen {
                 ? Text.translatable("worldmenu.import.done")
                 : title.copy().append(animatedDots());
 
-        context.drawCenteredTextWithShadow(textRenderer, heading, centreX, barY - 34, TEXT);
-        context.drawCenteredTextWithShadow(textRenderer, Text.literal(worldName), centreX, barY - 20, TEXT_DIM);
+        context.drawCenteredTextWithShadow(textRenderer, heading, centreX, barY - 34, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, Text.literal(worldName), centreX, barY - 20, 0xA0A0A0);
 
         int barX = centreX - BAR_WIDTH / 2;
         context.drawGuiTexture(BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
@@ -113,7 +99,7 @@ class ImportScreen extends Screen {
 
         if (!finished) {
             context.drawCenteredTextWithShadow(textRenderer, Text.literal(countText()),
-                    centreX, barY + 12, TEXT_DIM);
+                    centreX, barY + 12, 0xA0A0A0);
         }
 
         super.render(context, mouseX, mouseY, delta);
