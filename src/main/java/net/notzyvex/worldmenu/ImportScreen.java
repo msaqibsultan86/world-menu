@@ -71,6 +71,13 @@ class ImportScreen extends Screen {
         client.setScreen(new SelectWorldScreen(new TitleScreen()));
     }
 
+    // Vanilla blurs the whole backdrop when a world is loaded, which smears the
+    // progress text along with it. The plain darkening overlay stays readable.
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        renderInGameBackground(context);
+    }
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
