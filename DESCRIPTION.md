@@ -19,7 +19,7 @@
 
 <hr>
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-features.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-features.png" alt="" height="48" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="42" align="middle"></p>
 
 <p>🗺️ <b>Play maps you downloaded, instantly.</b> Adventure maps, parkour, puzzle maps, that CTM pack from 2013 — point at the folder and it's in your world list.</p>
 
@@ -33,7 +33,7 @@
 
 <hr>
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-requires.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/requires.png" alt="Requires" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-requires.png" alt="" height="48" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/requires.png" alt="Requires" height="42" align="middle"></p>
 
 <ul>
   <li>🧵 <b>Fabric API</b></li>
@@ -43,7 +43,7 @@
 
 <hr>
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-license.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-license.png" alt="" height="48" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="42" align="middle"></p>
 
 <p>The <b>source code</b> is licensed under <a href="https://github.com/msaqibsultan86/world-menu/blob/main/LICENSE">MIT</a> — fork it, learn from it, build on it.</p>
 
@@ -53,7 +53,7 @@
 
 <hr>
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-about.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/about.png" alt="About" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-about.png" alt="" height="48" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/about.png" alt="About" height="42" align="middle"></p>
 
 <p>Made by <b>NotZyvex</b>.</p>
 
