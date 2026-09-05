@@ -64,11 +64,13 @@ final class WorldImporter {
             filters.put(stack.UTF8("*.zip"));
             filters.flip();
 
+            // TinyFileDialogs refuses a title containing a quote or apostrophe
+            // and shows its own error instead of the dialog, so they are stripped.
             chosen = TinyFileDialogs.tinyfd_openFileDialog(
-                    Text.translatable("worldmenu.dialog.title").getString(),
+                    withoutQuotes(Text.translatable("worldmenu.dialog.title").getString()),
                     SavesDirectory.path() + File.separator,
                     filters,
-                    Text.translatable("worldmenu.dialog.filter").getString(),
+                    withoutQuotes(Text.translatable("worldmenu.dialog.filter").getString()),
                     false);
         }
 
@@ -78,6 +80,10 @@ final class WorldImporter {
 
         MinecraftClient client = MinecraftClient.getInstance();
         importAny(Path.of(chosen), client);
+    }
+
+    private static String withoutQuotes(String text) {
+        return text.replace("\"", "").replace("'", "");
     }
 
     /** Accepts a world folder, a level.dat inside one, or a zipped world. */
