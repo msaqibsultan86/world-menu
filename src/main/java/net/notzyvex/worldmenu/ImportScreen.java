@@ -73,14 +73,10 @@ class ImportScreen extends Screen {
         minecraft.setScreen(new SelectWorldScreen(new TitleScreen()));
     }
 
-    // Vanilla blurs the whole backdrop when a world is loaded, which smears the
-    // progress text along with it. The plain darkening overlay stays readable.
-    @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderTransparentBackground(graphics);
-    }
-
-    /** Vanilla blurs the frame behind any open screen. This turns that off. */
+    /**
+     * Vanilla blurs the frame behind any open screen, which smears the progress
+     * text along with it. Everything else about the background stays vanilla.
+     */
     @Override
     protected void renderBlurredBackground(float delta) {
     }
