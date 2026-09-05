@@ -5,10 +5,13 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -21,6 +24,7 @@ import java.util.stream.Stream;
 final class WorldImporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorldMenuClient.MOD_ID);
     private static final int MAX_NAME_ATTEMPTS = 1000;
+    private static final String LEVEL_DAT = "level.dat";
 
     private WorldImporter() {
     }
@@ -33,21 +37,43 @@ final class WorldImporter {
 
     // TinyFileDialogs ships with LWJGL and is safe alongside GLFW. Swing's
     // JFileChooser deadlocks against the render thread on macOS.
+    //
+    // The file dialog is used rather than the folder dialog on purpose: Windows
+    // only has a real Explorer window for picking files. Its folder picker is
+    // the old cramped tree widget. Picking level.dat and taking its parent
+    // gives the same result through a far better dialog.
     private static void pickAndImport() {
-        String chosen = TinyFileDialogs.tinyfd_selectFolderDialog(
-                Text.translatable("worldmenu.dialog.title").getString(),
-                SavesDirectory.path().toString());
+        String chosen;
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            PointerBuffer filters = stack.mallocPointer(1);
+            filters.put(stack.UTF8(LEVEL_DAT));
+            filters.flip();
+
+            chosen = TinyFileDialogs.tinyfd_openFileDialog(
+                    Text.translatable("worldmenu.dialog.title").getString(),
+                    SavesDirectory.path() + File.separator,
+                    filters,
+                    Text.translatable("worldmenu.dialog.filter").getString(),
+                    false);
+        }
 
         if (chosen == null) {
             return;
         }
 
+        Path worldFolder = Path.of(chosen).getParent();
         MinecraftClient client = MinecraftClient.getInstance();
-        client.execute(() -> importFrom(Path.of(chosen), client));
+
+        if (worldFolder == null) {
+            client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
+            return;
+        }
+
+        client.execute(() -> importFrom(worldFolder, client));
     }
 
     private static void importFrom(Path source, MinecraftClient client) {
-        if (!Files.isRegularFile(source.resolve("level.dat"))) {
+        if (!Files.isRegularFile(source.resolve(LEVEL_DAT))) {
             notify(client, "worldmenu.import.not_a_world");
             return;
         }

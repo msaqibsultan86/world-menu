@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="https://modrinth.com/mod/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/modrinth.svg" alt="Available on Modrinth"></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/curseforge.svg" alt="Available on CurseForge"></a>
   <a href="https://fabricmc.net/"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/fabric.svg" alt="Supports Fabric"></a>
   <a href="https://discord.gg/qvBg56VbCa"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/discord.svg" alt="Chat with us on Discord"></a>
 </p>
