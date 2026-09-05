@@ -98,7 +98,10 @@ class ImportScreen extends Screen {
         graphics.drawCenteredString(font, Component.literal(worldName), centreX, barY - 20, 0xA0A0A0);
 
         int barX = centreX - BAR_WIDTH / 2;
-        //? if >=1.21.4 {
+        //? if >=1.21.6 {
+        /*graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
+        *///?} elif >=1.21.4 {
         /*graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
                 BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
         *///?} else {
@@ -111,7 +114,10 @@ class ImportScreen extends Screen {
 
         int filled = Math.round(shownProgress * BAR_WIDTH);
         if (filled > 0) {
-            //? if >=1.21.4 {
+            //? if >=1.21.6 {
+            /*graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                    BAR_PROGRESS, BAR_WIDTH, BAR_HEIGHT, 0, 0, barX, barY, filled, BAR_HEIGHT);
+            *///?} elif >=1.21.4 {
             /*graphics.blitSprite(net.minecraft.client.renderer.RenderType::guiTextured,
                     BAR_PROGRESS, BAR_WIDTH, BAR_HEIGHT, 0, 0, barX, barY, filled, BAR_HEIGHT);
             *///?} else {
