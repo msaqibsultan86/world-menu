@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/msaqibsultan86/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/github.svg" alt="Available on GitHub"></a>
+  <a href="https://github.com/msaqibsultan86/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/github.svg" alt="Source on GitHub"></a>
 </p>
 
 <p>You downloaded a map. Now close the game, hunt for your instance folder, dig through AppData, unzip it into the right place, and hope you didn't nest the folder one level too deep. Launch again — and it isn't there. 😤</p>
