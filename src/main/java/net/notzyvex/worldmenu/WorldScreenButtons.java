@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-final class SelectWorldScreenButtons {
+final class WorldScreenButtons {
     private static final Identifier FOLDER_ICON =
             Identifier.of(WorldMenuClient.MOD_ID, "textures/gui/folder.png");
     private static final Identifier IMPORT_ICON =
@@ -15,18 +15,18 @@ final class SelectWorldScreenButtons {
     private static final int HEIGHT = 20;
     private static final int MARGIN = 6;
 
-    private SelectWorldScreenButtons() {
+    private WorldScreenButtons() {
     }
 
-    static void addTo(Screen screen, int scaledWidth) {
+    static void addTo(Screen screen, int scaledWidth, int topOffset) {
         IconButton openFolder = new IconButton(
-                MARGIN, MARGIN, WIDTH, HEIGHT,
+                MARGIN, topOffset, WIDTH, HEIGHT,
                 Text.translatable("worldmenu.button.open_folder"),
                 FOLDER_ICON,
                 button -> SavesDirectory.open());
 
         IconButton importWorld = new IconButton(
-                scaledWidth - WIDTH - MARGIN, MARGIN, WIDTH, HEIGHT,
+                scaledWidth - WIDTH - MARGIN, topOffset, WIDTH, HEIGHT,
                 Text.translatable("worldmenu.button.import_world"),
                 IMPORT_ICON,
                 button -> WorldImporter.run());
