@@ -6,10 +6,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 final class WorldScreenButtons {
+    //? if >=1.21 {
     private static final ResourceLocation FOLDER_ICON =
             ResourceLocation.fromNamespaceAndPath(WorldMenuClient.MOD_ID, "textures/gui/folder.png");
     private static final ResourceLocation IMPORT_ICON =
             ResourceLocation.fromNamespaceAndPath(WorldMenuClient.MOD_ID, "textures/gui/import.png");
+    //?} else {
+    /*private static final ResourceLocation FOLDER_ICON =
+            new ResourceLocation(WorldMenuClient.MOD_ID, "textures/gui/folder.png");
+    private static final ResourceLocation IMPORT_ICON =
+            new ResourceLocation(WorldMenuClient.MOD_ID, "textures/gui/import.png");
+    *///?}
 
     private static final int WIDTH = 120;
     private static final int HEIGHT = 20;

@@ -15,10 +15,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Shown while a world is being copied in, and once it is finished. */
 class ImportScreen extends Screen {
+    //? if >=1.21 {
     private static final ResourceLocation BAR_BACKGROUND =
             ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation BAR_PROGRESS =
             ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
+    //?} elif >=1.20.2 {
+    /*private static final ResourceLocation BAR_BACKGROUND =
+            new ResourceLocation("hud/experience_bar_background");
+    private static final ResourceLocation BAR_PROGRESS =
+            new ResourceLocation("hud/experience_bar_progress");
+    *///?} else {
+    /*private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
+    *///?}
 
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
@@ -77,7 +86,7 @@ class ImportScreen extends Screen {
      * Vanilla blurs the frame behind any open screen, which smears the progress
      * text along with it. Everything else about the background stays vanilla.
      */
-    //? if <1.21.2 {
+    //? if >=1.21 <1.21.2 {
     @Override
     protected void renderBlurredBackground(float delta) {
     }
@@ -85,7 +94,10 @@ class ImportScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        //? if >=1.20.2 {
         renderBackground(graphics, mouseX, mouseY, delta);
+        //?} else
+        /*renderBackground(graphics);*/
 
         int centreX = width / 2;
         int barY = height / 2;
@@ -98,7 +110,9 @@ class ImportScreen extends Screen {
         graphics.drawCenteredString(font, Component.literal(worldName), centreX, barY - 20, 0xA0A0A0);
 
         int barX = centreX - BAR_WIDTH / 2;
-        //? if >=1.21.6 {
+        //? if <1.20.2 {
+        /*graphics.blit(ICONS, barX, barY, 0, 64, BAR_WIDTH, BAR_HEIGHT);
+        *///?} elif >=1.21.6 {
         /*graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                 BAR_BACKGROUND, barX, barY, BAR_WIDTH, BAR_HEIGHT);
         *///?} elif >=1.21.4 {
@@ -114,7 +128,9 @@ class ImportScreen extends Screen {
 
         int filled = Math.round(shownProgress * BAR_WIDTH);
         if (filled > 0) {
-            //? if >=1.21.6 {
+            //? if <1.20.2 {
+            /*graphics.blit(ICONS, barX, barY, 0, 69, filled, BAR_HEIGHT);
+            *///?} elif >=1.21.6 {
             /*graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                     BAR_PROGRESS, BAR_WIDTH, BAR_HEIGHT, 0, 0, barX, barY, filled, BAR_HEIGHT);
             *///?} elif >=1.21.4 {

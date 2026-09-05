@@ -330,7 +330,10 @@ final class WorldImporter {
         client.getToasts().addToast(SystemToast.multiline(
         //?}
                 client,
+                //? if >=1.20.2 {
                 SystemToast.SystemToastId.WORLD_ACCESS_FAILURE,
+                //?} else
+                /*SystemToast.SystemToastIds.WORLD_ACCESS_FAILURE,*/
                 Component.translatable("worldmenu.import.toast"),
                 Component.translatable(messageKey)));
     }
