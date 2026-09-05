@@ -19,6 +19,11 @@ final class WorldScreenButtons {
     }
 
     static void addTo(Screen screen, int scaledWidth, int topOffset) {
+        // A screen re-initialises when the window is resized or a tab is
+        // switched, and the event fires again each time. Without this the
+        // buttons stack up on top of each other.
+        Screens.getButtons(screen).removeIf(widget -> widget instanceof IconButton);
+
         IconButton openFolder = new IconButton(
                 MARGIN, topOffset, WIDTH, HEIGHT,
                 Text.translatable("worldmenu.button.open_folder"),
