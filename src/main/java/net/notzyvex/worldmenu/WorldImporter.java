@@ -326,7 +326,7 @@ final class WorldImporter {
     private static void notify(Minecraft client, String messageKey) {
         client.getToasts().addToast(SystemToast.multiline(
                 client,
-                SystemToast.Type.WORLD_ACCESS_FAILURE,
+                SystemToast.SystemToastId.WORLD_ACCESS_FAILURE,
                 Component.translatable("worldmenu.import.toast"),
                 Component.translatable(messageKey)));
     }
