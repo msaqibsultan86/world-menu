@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "worldmenu",
+  "version": "${version}",
+  "name": "World Menu",
+  "description": "Open your saves folder and import worlds right from the Singleplayer menu.",
+  "authors": ["NotZyvex"],
+  "license": "MIT",
+  "icon": "assets/worldmenu/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["net.notzyvex.worldmenu.WorldMenuClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
