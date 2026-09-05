@@ -15,7 +15,7 @@ No more alt-tabbing through AppData to find your saves. No more dragging folders
 
 ---
 
-<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="48">
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-features.gif" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="42" align="middle"></p>
 
 📂 **Open World Folder** — one click opens this instance's `saves` folder in your file manager. Works on Windows, macOS and Linux.
 
@@ -27,7 +27,7 @@ No more alt-tabbing through AppData to find your saves. No more dragging folders
 
 ---
 
-<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/requires.png" alt="Requires" height="48">
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-requires.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/requires.png" alt="Requires" height="42" align="middle"></p>
 
 - 🧵 **Fabric API**
 
@@ -35,7 +35,7 @@ No more alt-tabbing through AppData to find your saves. No more dragging folders
 
 ---
 
-<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="48">
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-license.gif" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="42" align="middle"></p>
 
 The **source code** is licensed under [MIT](https://github.com/msaqibsultan86/world-menu/blob/main/LICENSE) — fork it, learn from it, build on it.
 
@@ -45,7 +45,7 @@ The **in-game button icons** were made for this mod by **NotZyvex**. Please don'
 
 ---
 
-<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/about.png" alt="About" height="48">
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-about.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/about.png" alt="About" height="42" align="middle"></p>
 
 Made by **NotZyvex**.
 
