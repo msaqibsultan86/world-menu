@@ -114,25 +114,41 @@ final class WorldImporter {
             return;
         }
 
+        String name = source.getFileName().toString();
         Path destination;
         try {
-            destination = availableDestination(source.getFileName().toString());
+            destination = availableDestination(name);
         } catch (IOException e) {
             LOGGER.error("Could not pick a destination folder for {}", source, e);
             client.execute(() -> notify(client, "worldmenu.import.failed"));
             return;
         }
 
+        ImportScreen screen = showProgress(client, name);
         try {
-            copyTree(source, destination);
+            screen.setTotal(countFiles(source));
+            copyTree(source, destination, screen);
         } catch (IOException e) {
             LOGGER.error("Could not copy {} into the saves folder", source, e);
             deleteTree(destination);
             client.execute(() -> notify(client, "worldmenu.import.failed"));
+            finish(client);
             return;
         }
 
-        finish(client);
+        screen.markFinished();
+    }
+
+    private static ImportScreen showProgress(MinecraftClient client, String worldName) {
+        ImportScreen screen = new ImportScreen(worldName);
+        client.execute(() -> client.setScreen(screen));
+        return screen;
+    }
+
+    private static int countFiles(Path root) throws IOException {
+        try (Stream<Path> paths = Files.walk(root)) {
+            return (int) paths.filter(Files::isRegularFile).count();
+        }
     }
 
     private static void importZip(Path zipPath, MinecraftClient client) {
@@ -146,16 +162,19 @@ final class WorldImporter {
             String name = worldNameFor(root, zipPath);
             Path destination = availableDestination(name);
 
+            ImportScreen screen = showProgress(client, name);
             try {
-                extract(zip, root, destination);
+                screen.setTotal(countEntries(zip, root));
+                extract(zip, root, destination, screen);
             } catch (IOException e) {
                 LOGGER.error("Could not extract {} into the saves folder", zipPath, e);
                 deleteTree(destination);
                 client.execute(() -> notify(client, "worldmenu.import.failed"));
+                finish(client);
                 return;
             }
 
-            finish(client);
+            screen.markFinished();
         } catch (IOException e) {
             LOGGER.error("Could not read {}", zipPath, e);
             client.execute(() -> notify(client, "worldmenu.import.failed"));
@@ -199,7 +218,20 @@ final class WorldImporter {
         return dot > 0 ? fileName.substring(0, dot) : fileName;
     }
 
-    private static void extract(ZipFile zip, String root, Path destination) throws IOException {
+    private static int countEntries(ZipFile zip, String root) {
+        int count = 0;
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            String name = entry.getName().replace('\', '/');
+            if (!entry.isDirectory() && !name.startsWith("__MACOSX/") && name.startsWith(root)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static void extract(ZipFile zip, String root, Path destination, ImportScreen screen) throws IOException {
         Files.createDirectories(destination);
         Path base = destination.toAbsolutePath().normalize();
 
@@ -228,16 +260,12 @@ final class WorldImporter {
             try (InputStream in = zip.getInputStream(entry)) {
                 Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
             }
+            screen.step();
         }
     }
 
     private static void finish(MinecraftClient client) {
-        client.execute(() -> {
-            notify(client, "worldmenu.import.done");
-            if (client.currentScreen instanceof SelectWorldScreen) {
-                client.setScreen(new SelectWorldScreen(new TitleScreen()));
-            }
-        });
+        client.execute(() -> client.setScreen(new SelectWorldScreen(new TitleScreen())));
     }
 
     private static Path availableDestination(String folderName) throws IOException {
@@ -255,7 +283,7 @@ final class WorldImporter {
         return candidate;
     }
 
-    private static void copyTree(Path source, Path destination) throws IOException {
+    private static void copyTree(Path source, Path destination, ImportScreen screen) throws IOException {
         Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -266,6 +294,7 @@ final class WorldImporter {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.copy(file, destination.resolve(source.relativize(file).toString()));
+                screen.step();
                 return FileVisitResult.CONTINUE;
             }
         });

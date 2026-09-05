@@ -6,5 +6,6 @@
   "worldmenu.import.toast": "Import World",
   "worldmenu.import.not_a_world": "That isn't a Minecraft world",
   "worldmenu.import.failed": "Import failed — see the log for details",
-  "worldmenu.import.done": "World imported"
+  "worldmenu.import.done": "World imported",
+  "worldmenu.import.title": "Importing world"
 }
