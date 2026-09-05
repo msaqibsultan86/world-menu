@@ -1,39 +1,44 @@
 plugins {
     id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'dev.kikugie.stonecutter'
     id 'java'
 }
 
-version = project.mod_version
-group = project.maven_group
+def mcVersion = property('minecraft_version')
+def javaVersion = property('java_version') as int
+
+version = "${property('mod_version')}+${mcVersion}"
+group = property('maven_group')
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = property('archives_base_name')
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    minecraft "com.mojang:minecraft:${mcVersion}"
     mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc:fabric-loader:${property('loader_version')}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_version')}"
 }
 
 processResources {
-    inputs.property 'version', project.version
+    inputs.property 'version', version
+    inputs.property 'minecraft_version', mcVersion
     filesMatching('fabric.mod.json') {
-        expand version: project.version
+        expand version: version, minecraft_version: mcVersion
     }
 }
 
 java {
-    // The system default JDK is newer than 21 and Loom will not build against it,
+    // The system default JDK may be newer than the one Loom builds against,
     // so the toolchain is pinned rather than inherited from PATH.
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
     withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 21
+    options.release = javaVersion
 }
