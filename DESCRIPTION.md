@@ -5,9 +5,12 @@
 <p align="center">
   <a href="https://modrinth.com/mod/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/modrinth.svg" alt="Available on Modrinth"></a>
   <a href="REPLACE_WITH_CURSEFORGE_URL"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/curseforge.svg" alt="Available on CurseForge"></a>
-  <a href="https://github.com/msaqibsultan86/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/github.svg" alt="Source on GitHub"></a>
   <a href="https://fabricmc.net/"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/fabric.svg" alt="Supports Fabric"></a>
   <a href="REPLACE_WITH_DISCORD_INVITE"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/discord.svg" alt="Chat with us on Discord"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/msaqibsultan86/world-menu"><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/badges/github.svg" alt="Available on GitHub"></a>
 </p>
 
 <p>You downloaded a map. Now close the game, hunt for your instance folder, dig through AppData, unzip it into the right place, and hope you didn't nest the folder one level too deep. Launch again — and it isn't there. 😤</p>
