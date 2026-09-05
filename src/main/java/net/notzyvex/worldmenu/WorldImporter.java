@@ -1,10 +1,10 @@
 package net.notzyvex.worldmenu;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -44,7 +44,7 @@ final class WorldImporter {
 
     /** Handles files dropped onto the game window. */
     static void importDropped(List<Path> paths) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         for (Path path : paths) {
             importAny(path, client);
         }
@@ -67,10 +67,10 @@ final class WorldImporter {
             // TinyFileDialogs refuses a title containing a quote or apostrophe
             // and shows its own error instead of the dialog, so they are stripped.
             chosen = TinyFileDialogs.tinyfd_openFileDialog(
-                    withoutQuotes(Text.translatable("worldmenu.dialog.title").getString()),
+                    withoutQuotes(Component.translatable("worldmenu.dialog.title").getString()),
                     SavesDirectory.path() + File.separator,
                     filters,
-                    withoutQuotes(Text.translatable("worldmenu.dialog.filter").getString()),
+                    withoutQuotes(Component.translatable("worldmenu.dialog.filter").getString()),
                     false);
         }
 
@@ -78,7 +78,7 @@ final class WorldImporter {
             return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         importAny(Path.of(chosen), client);
     }
 
@@ -87,7 +87,7 @@ final class WorldImporter {
     }
 
     /** Accepts a world folder, a level.dat inside one, or a zipped world. */
-    private static void importAny(Path path, MinecraftClient client) {
+    private static void importAny(Path path, Minecraft client) {
         if (isZip(path)) {
             runOffThread(() -> importZip(path, client));
             return;
@@ -114,7 +114,7 @@ final class WorldImporter {
                 && path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip");
     }
 
-    private static void importFolder(Path source, MinecraftClient client) {
+    private static void importFolder(Path source, Minecraft client) {
         if (!Files.isRegularFile(source.resolve(LEVEL_DAT))) {
             client.execute(() -> notify(client, "worldmenu.import.not_a_world"));
             return;
@@ -145,7 +145,7 @@ final class WorldImporter {
         screen.markFinished();
     }
 
-    private static ImportScreen showProgress(MinecraftClient client, String worldName) {
+    private static ImportScreen showProgress(Minecraft client, String worldName) {
         ImportScreen screen = new ImportScreen(worldName);
         client.execute(() -> client.setScreen(screen));
         return screen;
@@ -157,7 +157,7 @@ final class WorldImporter {
         }
     }
 
-    private static void importZip(Path zipPath, MinecraftClient client) {
+    private static void importZip(Path zipPath, Minecraft client) {
         try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             String root = findWorldRoot(zip);
             if (root == null) {
@@ -270,7 +270,7 @@ final class WorldImporter {
         }
     }
 
-    private static void finish(MinecraftClient client) {
+    private static void finish(Minecraft client) {
         client.execute(() -> client.setScreen(new SelectWorldScreen(new TitleScreen())));
     }
 
@@ -323,11 +323,11 @@ final class WorldImporter {
         }
     }
 
-    private static void notify(MinecraftClient client, String messageKey) {
-        client.getToastManager().add(SystemToast.create(
+    private static void notify(Minecraft client, String messageKey) {
+        client.getToasts().addToast(SystemToast.multiline(
                 client,
                 SystemToast.Type.WORLD_ACCESS_FAILURE,
-                Text.translatable("worldmenu.import.toast"),
-                Text.translatable(messageKey)));
+                Component.translatable("worldmenu.import.toast"),
+                Component.translatable(messageKey)));
     }
 }

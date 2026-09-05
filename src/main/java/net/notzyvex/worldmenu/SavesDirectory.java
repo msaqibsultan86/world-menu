@@ -1,7 +1,7 @@
 package net.notzyvex.worldmenu;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ final class SavesDirectory {
     }
 
     static Path path() {
-        return MinecraftClient.getInstance().runDirectory.toPath().resolve("saves");
+        return Minecraft.getInstance().gameDirectory.toPath().resolve("saves");
     }
 
     static void open() {
@@ -27,6 +27,6 @@ final class SavesDirectory {
             LOGGER.error("Could not create the saves directory at {}", saves, e);
             return;
         }
-        Util.getOperatingSystem().open(saves.toUri());
+        Util.getPlatform().openUri(saves.toUri());
     }
 }

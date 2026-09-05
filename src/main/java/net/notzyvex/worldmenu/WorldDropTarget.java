@@ -1,9 +1,9 @@
 package net.notzyvex.worldmenu;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWDropCallback;
 
@@ -17,14 +17,14 @@ final class WorldDropTarget {
     private WorldDropTarget() {
     }
 
-    static void install(MinecraftClient client) {
-        long handle = client.getWindow().getHandle();
+    static void install(Minecraft client) {
+        long handle = client.getWindow().getWindow();
         previous = GLFW.glfwSetDropCallback(handle, WorldDropTarget::onDrop);
     }
 
     private static void onDrop(long window, int count, long names) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        Screen screen = client.currentScreen;
+        Minecraft client = Minecraft.getInstance();
+        Screen screen = client.screen;
 
         // Anywhere else in the game, drops belong to vanilla — that is how
         // resource packs are installed by dragging them in.

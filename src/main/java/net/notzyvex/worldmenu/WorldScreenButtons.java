@@ -1,15 +1,15 @@
 package net.notzyvex.worldmenu;
 
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 final class WorldScreenButtons {
-    private static final Identifier FOLDER_ICON =
-            Identifier.of(WorldMenuClient.MOD_ID, "textures/gui/folder.png");
-    private static final Identifier IMPORT_ICON =
-            Identifier.of(WorldMenuClient.MOD_ID, "textures/gui/import.png");
+    private static final ResourceLocation FOLDER_ICON =
+            ResourceLocation.fromNamespaceAndPath(WorldMenuClient.MOD_ID, "textures/gui/folder.png");
+    private static final ResourceLocation IMPORT_ICON =
+            ResourceLocation.fromNamespaceAndPath(WorldMenuClient.MOD_ID, "textures/gui/import.png");
 
     private static final int WIDTH = 120;
     private static final int HEIGHT = 20;
@@ -26,13 +26,13 @@ final class WorldScreenButtons {
 
         IconButton openFolder = new IconButton(
                 MARGIN, topOffset, WIDTH, HEIGHT,
-                Text.translatable("worldmenu.button.open_folder"),
+                Component.translatable("worldmenu.button.open_folder"),
                 FOLDER_ICON,
                 button -> SavesDirectory.open());
 
         IconButton importWorld = new IconButton(
                 scaledWidth - WIDTH - MARGIN, topOffset, WIDTH, HEIGHT,
-                Text.translatable("worldmenu.button.import_world"),
+                Component.translatable("worldmenu.button.import_world"),
                 IMPORT_ICON,
                 button -> WorldImporter.run());
 
