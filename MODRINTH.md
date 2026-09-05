@@ -15,7 +15,7 @@ No more alt-tabbing through AppData to find your saves. No more dragging folders
 
 ---
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-features.gif" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-features.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/features.png" alt="Features" height="42" align="middle"></p>
 
 📂 **Open World Folder** — one click opens this instance's `saves` folder in your file manager. Works on Windows, macOS and Linux.
 
@@ -35,7 +35,7 @@ No more alt-tabbing through AppData to find your saves. No more dragging folders
 
 ---
 
-<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-license.gif" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="42" align="middle"></p>
+<p><img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/ico-license.png" alt="" height="42" align="middle">&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/msaqibsultan86/world-menu/main/assets/license-and-credits.png" alt="License and Credits" height="42" align="middle"></p>
 
 The **source code** is licensed under [MIT](https://github.com/msaqibsultan86/world-menu/blob/main/LICENSE) — fork it, learn from it, build on it.
 
